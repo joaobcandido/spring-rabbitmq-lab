@@ -1,23 +1,39 @@
-version: '3.8'
 
 services:
   rabbitmq:
-    image: rabbitmq:3-management # A tag "management" inclui o painel visual
+    image: rabbitmq:3.12-management
     container_name: rabbitmq-broker
     ports:
-      - "5672:5672"   # Porta padrão para comunicação (onde o Spring Boot vai conectar)
-      - "15672:15672" # Porta do painel visual (Interface Web)
+      - "5672:5672"
+      - "15672:15672"
     environment:
-      RABBITMQ_DEFAULT_USER: admin
-      RABBITMQ_DEFAULT_PASS: admin123
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
     networks:
-      - lab-network
-    volumes:
-      - rabbitmq_data:/var/lib/rabbitmq # Garante que as filas não sumam se o contêiner reiniciar
+      - rede-lab
+
+  api-produtora:
+    build: ./api-produtora
+    container_name: api-produtora
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_RABBITMQ_HOST=rabbitmq
+    depends_on:
+      - rabbitmq
+    networks:
+      - rede-lab
+
+  worker-consumidor:
+    build: ./worker-consumidor
+    container_name: worker-consumidor
+    environment:
+      - SPRING_RABBITMQ_HOST=rabbitmq
+    depends_on:
+      - rabbitmq
+    networks:
+      - rede-lab
 
 networks:
-  lab-network:
-    driver: bridge # Quando formos para a OCI (Swarm), mudaremos para "overlay"
-
-volumes:
-  rabbitmq_data:
+  rede-lab:
+    driver: bridge

@@ -1,0 +1,4 @@
+com\lab\api_produtora\config\RabbitMQConfig.class
+com\lab\api_produtora\controller\PedidoController.class
+com\lab\api_produtora\ApiProdutoraApplication.class
+com\lab\api_produtora\dto\PedidoDTO.class
