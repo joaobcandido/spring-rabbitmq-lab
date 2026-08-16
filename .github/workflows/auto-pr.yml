@@ -1,0 +1,41 @@
+name: Auto Create Pull Request
+
+# 1. Gatilho: O workflow vai rodar sempre que houver um push
+on:
+  push:
+    branches:
+      - 'feature/**' # Funciona para feature/api-produtora, feature/worker, etc.
+
+jobs:
+  create-pr:
+    runs-on: ubuntu-latest
+    
+    # 2. Permissões: Dá autorização para o bot do GitHub criar o PR
+    permissions:
+      pull-requests: write
+      contents: read
+      
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Create Pull Request
+        # 3. Usa o token automático do GitHub (não precisa configurar nada)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # 4. Verifica se já existe um PR aberto para essa branch
+          PR_EXISTS=$(gh pr list --head "${GITHUB_REF_NAME}" --json url --jq 'length')
+          
+          if [ "$PR_EXISTS" -eq "0" ]; then
+            # Se não existir, cria um novo PR apontando para a main
+            gh pr create \
+              --base main \
+              --head "${GITHUB_REF_NAME}" \
+              --title "🚀 Feature: ${GITHUB_REF_NAME}" \
+              --body "Pull request gerado automaticamente via GitHub Actions pelo push na branch \`${GITHUB_REF_NAME}\`."
+            echo "✅ Pull Request criado com sucesso!"
+          else
+            # Se já existir, apenas avisa e não faz nada
+            echo "ℹ️ Um Pull Request para esta branch já está aberto. Atualização de código feita no PR existente."
+          fi

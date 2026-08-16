@@ -1,0 +1,4 @@
+com\lab\worker_consumidor\WorkerConsumidorApplication.class
+com\lab\worker_consumidor\config\RabbitMQConfig.class
+com\lab\worker_consumidor\dto\PedidoDTO.class
+com\lab\worker_consumidor\consumer\PedidoConsumer.class
