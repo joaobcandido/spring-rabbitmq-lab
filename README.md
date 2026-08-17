@@ -120,6 +120,6 @@ GET http://localhost:8080/pedidos/consumir-dlq
 
 [x] Fase 5: Validação do fluxo assíncrono e consumo manual de DLQ.
 
-[ ] Fase 6: Criação de Dockerfiles otimizados (eclipse-temurin) para arquitetura ARM64.
+[x] Fase 6: Criação de Dockerfiles otimizados (eclipse-temurin) para arquitetura ARM64.
 
-[ ] Fase 7: Deploy e orquestração da stack no Docker Swarm (OCI).
+[x] Fase 7: Deploy e orquestração da stack no Docker Swarm (OCI).
