@@ -11,6 +11,8 @@ public class RabbitMQConfig {
 
     public static final String FILA_PEDIDOS = "pedidos.v1.fila-criacao";
     public static final String FILA_PEDIDOS_DLQ = "pedidos.v1.fila-criacao.dlq";
+    public static final String FILA_PEDIDOS_DELAY = "pedidos.v1.fila-delay"; // <--- Nova fila de espera
+    
     public static final String EXCHANGE_PEDIDOS = "pedidos.v1.exchange-criacao";
     public static final String EXCHANGE_DLQ = "pedidos.v1.exchange-criacao.dlq";
 
@@ -25,6 +27,16 @@ public class RabbitMQConfig {
     @Bean
     public Queue filaPedidosDlq() {
         return QueueBuilder.durable(FILA_PEDIDOS_DLQ).build();
+    }
+
+    // --- NOVA FILA DE DELAY ---
+    @Bean
+    public Queue filaPedidosDelay() {
+        return QueueBuilder.durable(FILA_PEDIDOS_DELAY)
+                .withArgument("x-message-ttl", 60000) // Tempo de espera em milissegundos (60000 ms = 1 minuto)
+                .withArgument("x-dead-letter-exchange", EXCHANGE_PEDIDOS) // Quando expirar, joga para a exchange principal
+                .withArgument("x-dead-letter-routing-key", "") // Fanout exchange não usa routing key específica
+                .build();
     }
 
     @Bean

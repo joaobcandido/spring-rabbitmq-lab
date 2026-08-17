@@ -22,7 +22,9 @@ public class PedidoController {
         String novoId = UUID.randomUUID().toString();
         PedidoDTO pedidoComId = new PedidoDTO(novoId, pedidoRecebido.cliente(), pedidoRecebido.valor());
         
-        rabbitTemplate.convertAndSend(RabbitMQConfig.FILA_PEDIDOS, pedidoComId);
+        // ENVIA PARA A FILA DE DELAY EM VEZ DA FILA DIRETA
+        rabbitTemplate.convertAndSend(RabbitMQConfig.FILA_PEDIDOS_DELAY, pedidoComId);
+        
         return ResponseEntity.ok(pedidoComId);
     }
 

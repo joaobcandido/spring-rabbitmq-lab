@@ -11,6 +11,8 @@ public class RabbitMQConfig {
 
     public static final String FILA_PEDIDOS = "pedidos.v1.fila-criacao";
     public static final String FILA_PEDIDOS_DLQ = "pedidos.v1.fila-criacao.dlq";
+    public static final String FILA_PEDIDOS_DELAY = "pedidos.v1.fila-delay"; // <--- Adicionado aqui também
+    
     public static final String EXCHANGE_PEDIDOS = "pedidos.v1.exchange-criacao";
     public static final String EXCHANGE_DLQ = "pedidos.v1.exchange-criacao.dlq";
 
@@ -25,6 +27,16 @@ public class RabbitMQConfig {
     @Bean
     public Queue filaPedidosDlq() {
         return QueueBuilder.durable(FILA_PEDIDOS_DLQ).build();
+    }
+
+    // --- NOVA FILA DE DELAY NA API ---
+    @Bean
+    public Queue filaPedidosDelay() {
+        return QueueBuilder.durable(FILA_PEDIDOS_DELAY)
+                .withArgument("x-message-ttl", 60000) // 1 minuto de atraso
+                .withArgument("x-dead-letter-exchange", EXCHANGE_PEDIDOS) // Quando expirar, vai para a exchange principal
+                .withArgument("x-dead-letter-routing-key", "")
+                .build();
     }
 
     @Bean
