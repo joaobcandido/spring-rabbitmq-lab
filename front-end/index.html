@@ -45,7 +45,7 @@
                 divResultado.innerText = 'Enviando pedido...';
 
                 // IMPORTANTE: Substitua pelo IP público da sua instância da OCI
-                const resposta = await fetch('http://137.131.183.68:8080/pedidos', {
+                const resposta = await fetch('http://164.152.36.247:8080/pedidos', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ cliente, valor })
