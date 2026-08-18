@@ -9,6 +9,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/pedidos")
+@CrossOrigin(origins = "*")
 public class PedidoController {
 
     private final RabbitTemplate rabbitTemplate;

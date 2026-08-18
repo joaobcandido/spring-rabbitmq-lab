@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab Pedidos - RabbitMQ & OCI</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
+        h2 { margin-top: 0; color: #333; text-align: center; }
+        label { display: block; margin-top: 15px; font-weight: 600; color: #555; font-size: 14px; }
+        input { width: 100%; padding: 10px; margin-top: 5px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; }
+        button { width: 100%; padding: 12px; margin-top: 20px; background: #0070f3; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
+        button:hover { background: #0051a2; }
+        #resultado { margin-top: 20px; background: #f8f9fa; border: 1px solid #e9ecef; padding: 12px; border-radius: 6px; font-size: 13px; font-family: monospace; white-space: pre-wrap; display: none; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Painel de Pedidos</h2>
+        <label for="cliente">Nome do Cliente:</label>
+        <input type="text" id="cliente" placeholder="Ex: Maria Souza">
+        
+        <label for="valor">Valor do Pedido (R$):</label>
+        <input type="number" id="valor" placeholder="Ex: 150.00" step="0.01">
+        
+        <button onclick="enviarPedido()">Enviar Pedido (Com Delay)</button>
+        
+        <div id="resultado"></div>
+    </div>
+
+    <script>
+        async function enviarPedido() {
+            const cliente = document.getElementById('cliente').value;
+            const valor = parseFloat(document.getElementById('valor').value);
+            const divResultado = document.getElementById('resultado');
+
+            if (!cliente || !valor) {
+                alert('Por favor, preencha todos os campos!');
+                return;
+            }
+
+            try {
+                divResultado.style.display = 'block';
+                divResultado.innerText = 'Enviando pedido...';
+
+                // IMPORTANTE: Substitua pelo IP público da sua instância da OCI
+                const resposta = await fetch('http://137.131.183.68:8080/pedidos', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ cliente, valor })
+                });
+
+                const dados = await resposta.json();
+                divResultado.innerText = "✅ Pedido enviado com sucesso!\n\n" + JSON.stringify(dados, null, 2);
+            } catch (error) {
+                divResultado.innerText = "❌ Erro ao conectar com a API:\n" + error;
+            }
+        }
+    </script>
+</body>
+</html>
