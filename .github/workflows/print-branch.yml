@@ -3,10 +3,10 @@ name: Info da Branch e Repositorio
 on:
   push:
     branches:
-      - '**'
+      - 'feature/api-front-end'
   pull_request:
     branches:
-      - '**'
+      - 'feature/api-front-end'
 
 jobs:
   info-branches:
