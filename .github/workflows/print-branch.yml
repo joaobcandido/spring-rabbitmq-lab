@@ -16,7 +16,7 @@ jobs:
       - name: Checkout do codigo com historico completo
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Essencial para trazer o historico e as referencias
+          #fetch-depth: 0 
 
       - name: Contar commits na branch atual
         run: |
