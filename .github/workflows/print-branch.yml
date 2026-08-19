@@ -1,23 +1,28 @@
-name: Exemplo Print Branch
+name: Contar Commits na Branch
 
-# Define quando o workflow será disparado
 on:
   push:
     branches:
-      - '**' # Executa para qualquer branch em caso de push
+      - '**'
   pull_request:
     branches:
       - '**'
 
 jobs:
-  verificar-branch:
+  contar-commits:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Checkout do codigo
+      - name: Checkout do codigo com historico completo
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Essencial para trazer o historico de commits
 
-      - name: Print da branch atual
+      - name: Contar e printar os commits
         run: |
-          echo "O workflow esta rodando na branch: ${{ github.ref_name }}"
-          echo "O evento que disparou foi: ${{ github.event_name }}"
+          echo "A branch atual é: ${{ github.ref_name }}"
+          
+          # Conta quantos commits existem na branch atual
+          NUM_COMMITS=$(git rev-list --count HEAD)
+          
+          echo "Total de commits nesta branch: $NUM_COMMITS"
