@@ -1,0 +1,23 @@
+name: Exemplo Print Branch
+
+# Define quando o workflow será disparado
+on:
+  push:
+    branches:
+      - '**' # Executa para qualquer branch em caso de push
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+  verificar-branch:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout do codigo
+        uses: actions/checkout@v4
+
+      - name: Print da branch atual
+        run: |
+          echo "O workflow esta rodando na branch: ${{ github.ref_name }}"
+          echo "O evento que disparou foi: ${{ github.event_name }}"
