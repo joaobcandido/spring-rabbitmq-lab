@@ -15,9 +15,6 @@ jobs:
     steps:
       - name: Checkout do codigo com historico completo
         uses: actions/checkout@v4
-        with:
-          #fetch-depth: 0 
-
       - name: Contar commits na branch atual
         run: |
           echo "A branch atual é: ${{ github.ref_name }}"
