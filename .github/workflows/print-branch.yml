@@ -1,4 +1,4 @@
-name: Contar Commits na Branch
+name: Info da Branch e Repositorio
 
 on:
   push:
@@ -9,20 +9,25 @@ on:
       - '**'
 
 jobs:
-  contar-commits:
+  info-branches:
     runs-on: ubuntu-latest
     
     steps:
       - name: Checkout do codigo com historico completo
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Essencial para trazer o historico de commits
+          fetch-depth: 0 # Essencial para trazer o historico e as referencias
 
-      - name: Contar e printar os commits
+      - name: Contar commits na branch atual
         run: |
           echo "A branch atual é: ${{ github.ref_name }}"
-          
-          # Conta quantos commits existem na branch atual
           NUM_COMMITS=$(git rev-list --count HEAD)
-          
           echo "Total de commits nesta branch: $NUM_COMMITS"
+
+      - name: Listar todas as branches do repositorio
+        run: |
+          echo "=== Listando todas as branches remotas ==="
+          git branch -r
+          
+          echo -e "\n=== Listando todas as branches (locais e remotas) ==="
+          git branch -a
